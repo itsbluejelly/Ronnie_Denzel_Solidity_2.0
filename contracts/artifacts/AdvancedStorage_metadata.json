@@ -1,0 +1,211 @@
+{
+	"compiler": {
+		"version": "0.8.25+commit.b61c2a91"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_ownerAddress",
+						"type": "address"
+					},
+					{
+						"internalType": "string",
+						"name": "_name",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_favouriteNumber",
+						"type": "uint256"
+					}
+				],
+				"name": "_createPerson",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_ownerAddress",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_value",
+						"type": "uint256"
+					},
+					{
+						"components": [
+							{
+								"internalType": "string",
+								"name": "name",
+								"type": "string"
+							},
+							{
+								"internalType": "uint256",
+								"name": "favouriteNumber",
+								"type": "uint256"
+							}
+						],
+						"internalType": "struct Person",
+						"name": "_person",
+						"type": "tuple"
+					}
+				],
+				"name": "_decrFavouriteNumber",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_ownerAddress",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_value",
+						"type": "uint256"
+					},
+					{
+						"components": [
+							{
+								"internalType": "string",
+								"name": "name",
+								"type": "string"
+							},
+							{
+								"internalType": "uint256",
+								"name": "favouriteNumber",
+								"type": "uint256"
+							}
+						],
+						"internalType": "struct Person",
+						"name": "_person",
+						"type": "tuple"
+					}
+				],
+				"name": "_incrFavouriteNumber",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"name": "ownerAddresses",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"name": "peopleMap",
+				"outputs": [
+					{
+						"internalType": "string",
+						"name": "name",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "favouriteNumber",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"contracts/AdvancedStorage.sol": "AdvancedStorage"
+		},
+		"evmVersion": "cancun",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"@openzeppelin/contracts/utils/math/SafeMath.sol": {
+			"keccak256": "0x58b21219689909c4f8339af00813760337f7e2e7f169a97fe49e2896dcfb3b9a",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://ef8e012e946dec20e59f2d4446f4b44bb098f3fa8bac103b1b5112fff777447b",
+				"dweb:/ipfs/QmVTooKWcLkJ9W68yNX4MgdrbAKiAXwuRN9A7f4NkdcdtQ"
+			]
+		},
+		"contracts/AdvancedStorage.sol": {
+			"keccak256": "0x41eb0454a02d6f06fd0bc7f38ed50c6531449638c8e74f431287e26fc26bb850",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://ff621efeccbe43cf69d70d4f797718cc78a700ff657b37895ff3a24b7953c08b",
+				"dweb:/ipfs/QmbFADHN61FhjncGzYy7dV78kXEpmAzv9pCSsA2tA3F2xq"
+			]
+		},
+		"contracts/SimpleStorage.sol": {
+			"keccak256": "0xb12c3260cab4d90320abf4e169f61768748e52536901432c40fa1bafb801632e",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://2b55dd7072c13e198c068b94b44e8077c0594899208bd7cf861ea2260a1f3829",
+				"dweb:/ipfs/QmecTGeKEeYNcnJhYG3iBEk64neuAKWEPHUo4fvNgBcvc6"
+			]
+		},
+		"structs.sol": {
+			"keccak256": "0xb028d34b662b27bccf4edffc2dc0d408b41c742905a0868a46c5a88e1b5addfb",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://79a87fd8b53650dd357670f5f609e7690d3ad0442fc001a3ad96a3193bad3297",
+				"dweb:/ipfs/Qmf4otFrdaBsUWbKjQv7p1KLeMr9HFi7YNYNFkEogqzXwN"
+			]
+		}
+	},
+	"version": 1
+}
