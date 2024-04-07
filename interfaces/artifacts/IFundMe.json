@@ -49,37 +49,63 @@
 		},
 		"gasEstimates": null,
 		"methodIdentifiers": {
-			"decrFavouriteNumber(uint256,(string,uint256))": "1384960a",
-			"incrFavouriteNumber(uint256,(string,uint256))": "bf6f0eb2"
+			"fund()": "b60d4288",
+			"refund(address)": "fa89401a",
+			"setFundAmount(uint256)": "664bf86d",
+			"withdraw()": "3ccfd60b"
 		}
 	},
 	"abi": [
 		{
+			"inputs": [],
+			"name": "FailedTransaction",
+			"type": "error"
+		},
+		{
+			"inputs": [],
+			"name": "InsufficientFunds",
+			"type": "error"
+		},
+		{
+			"inputs": [],
+			"name": "InvalidRefund",
+			"type": "error"
+		},
+		{
+			"anonymous": false,
 			"inputs": [
 				{
-					"internalType": "uint256",
-					"name": "_value",
-					"type": "uint256"
+					"indexed": true,
+					"internalType": "address",
+					"name": "payer",
+					"type": "address"
 				},
 				{
-					"components": [
-						{
-							"internalType": "string",
-							"name": "name",
-							"type": "string"
-						},
-						{
-							"internalType": "uint256",
-							"name": "favouriteNumber",
-							"type": "uint256"
-						}
-					],
-					"internalType": "struct Person",
-					"name": "_person",
-					"type": "tuple"
+					"indexed": false,
+					"internalType": "uint256",
+					"name": "amount",
+					"type": "uint256"
 				}
 			],
-			"name": "decrFavouriteNumber",
+			"name": "funded",
+			"type": "event"
+		},
+		{
+			"inputs": [],
+			"name": "fund",
+			"outputs": [],
+			"stateMutability": "payable",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "address payable",
+					"name": "_refundAddress",
+					"type": "address"
+				}
+			],
+			"name": "refund",
 			"outputs": [],
 			"stateMutability": "nonpayable",
 			"type": "function"
@@ -90,26 +116,16 @@
 					"internalType": "uint256",
 					"name": "_value",
 					"type": "uint256"
-				},
-				{
-					"components": [
-						{
-							"internalType": "string",
-							"name": "name",
-							"type": "string"
-						},
-						{
-							"internalType": "uint256",
-							"name": "favouriteNumber",
-							"type": "uint256"
-						}
-					],
-					"internalType": "struct Person",
-					"name": "_person",
-					"type": "tuple"
 				}
 			],
-			"name": "incrFavouriteNumber",
+			"name": "setFundAmount",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [],
+			"name": "withdraw",
 			"outputs": [],
 			"stateMutability": "nonpayable",
 			"type": "function"
