@@ -4,11 +4,13 @@
   "description": "Solidity compiled with ethersjs",
   "main": "main.ts",
   "scripts": {
-    "compile": "cd backend && solcjs --abi --bin --include-path ../node_modules --base-path . Main.sol -o artifacts -p -v"
+    "compile": "cd backend && solcjs --abi --bin --include-path ../node_modules --base-path . Main.sol -o artifacts -p -v",
+    "deploy": "ts-node main.ts"
   },
   "author": "Ronnie Denzel",
   "license": "ISC",
   "dependencies": {
+    "dotenv": "^16.4.5",
     "web3": "^4.7.0"
   }
 }
