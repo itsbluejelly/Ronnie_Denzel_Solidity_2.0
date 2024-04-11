@@ -3,7 +3,7 @@ pragma solidity ^0.8.25;
 
 // IMPORTING NECESSARY FILES
     // IMPORTING CONTRACTS
-import "contracts/SimpleStorage.sol";
+import "../contracts/SimpleStorage.sol";
 
 contract AdvancedStorage is SimpleStorage{
     // A MODIFIER TO CHECK IF AN ADDRESS IS A REGISTERED OWNER

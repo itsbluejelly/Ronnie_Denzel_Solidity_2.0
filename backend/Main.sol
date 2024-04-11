@@ -3,9 +3,9 @@ pragma solidity ^0.8.25;
 
 // IMPORTING NECESSARY FILES
     // IMPORTING CONTRACTS
-import "contracts/AdvancedStorage.sol";
+import "./contracts/AdvancedStorage.sol";
     // IMPORTING INTERFACES
-import "interfaces/IMain.sol";
+import "./interfaces/IMain.sol";
 
 contract MainContract is IMainContract{
     // DECLARING VARIABLES

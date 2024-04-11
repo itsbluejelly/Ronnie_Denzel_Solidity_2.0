@@ -2,7 +2,7 @@
 pragma solidity ^0.8.25;
 
 // IMPORTING STRUCTS
-import "structs.sol";
+import "../structs.sol";
 
 contract SimpleStorage{
     // DECLARING VARIABLES
