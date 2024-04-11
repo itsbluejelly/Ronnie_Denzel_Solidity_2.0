@@ -1,16 +1,14 @@
 {
-  "name": "ronnie_denzel_solidity_2.0",
-  "version": "1.0.0",
-  "description": "Solidity compiled with ethersjs",
-  "main": "main.ts",
-  "scripts": {
-    "compile": "cd backend && solcjs --abi --bin --include-path ../node_modules --base-path . Main.sol -o artifacts -p -v",
-    "deploy": "ts-node main.ts"
-  },
-  "author": "Ronnie Denzel",
-  "license": "ISC",
-  "dependencies": {
-    "dotenv": "^16.4.5",
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^5.0.0",
+    "@nomicfoundation/hardhat-web3-v4": "^1.0.0",
+    "@types/jest": "^29.5.12",
+    "@types/mocha": "^10.0.6",
+    "hardhat": "^2.22.2",
     "web3": "^4.7.0"
+  },
+
+  "scripts": {
+    "compile": "npx hardhat compile"
   }
 }
