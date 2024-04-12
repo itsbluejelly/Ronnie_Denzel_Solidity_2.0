@@ -9,7 +9,7 @@ task("show_accounts", "A task to print out all accounts", async function(taskArg
 })
 
 const config: HardhatUserConfig = {
-  solidity: "0.8.24",
+  solidity: "0.8.25",
   defaultNetwork: "hardhat"
 };
 

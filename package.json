@@ -6,9 +6,5 @@
     "@types/mocha": "^10.0.6",
     "hardhat": "^2.22.2",
     "web3": "^4.7.0"
-  },
-
-  "scripts": {
-    "compile": "npx hardhat compile"
   }
 }
