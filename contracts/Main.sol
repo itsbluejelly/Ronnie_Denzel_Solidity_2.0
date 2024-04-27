@@ -82,7 +82,7 @@ contract MainContract is IMainContract{
         address _ownerAddress, 
         uint _value, 
         Person calldata _person
-    ) external{
+    ) external onlyExistingContract(_contractAddress){
         AdvancedStorage advancedStorage = AdvancedStorage(_contractAddress);
         advancedStorage._incrFavouriteNumber(_ownerAddress, _value, _person);
     }

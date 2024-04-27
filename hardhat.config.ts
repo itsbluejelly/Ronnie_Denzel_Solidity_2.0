@@ -17,7 +17,8 @@ task("show_account_balance", "A task to show the account balance", async({addres
 
 const config: HardhatUserConfig = {
   solidity: "0.8.25",
-  defaultNetwork: "hardhat"
+  defaultNetwork: "hardhat",
+  
 };
 
 export default config;
