@@ -1,0 +1,8 @@
+{
+  "name": "ronnie_denzel_solidity_2.0",
+  "version": "1.0.0",
+  "description": "Implementing Web3js in contract management",
+  "main": "index.ts",
+  "author": "Ronnie Denzel",
+  "license": "ISC"
+}
