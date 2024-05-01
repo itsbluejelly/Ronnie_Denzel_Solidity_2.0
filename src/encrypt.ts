@@ -1,7 +1,6 @@
 // IMPORTING NECESSARY FILES
     // IMPORTING MODULES
 import {KeyStore, Web3} from "web3"
-import bcrypt from "bcrypt"
 import dotenv from "dotenv"
 import fsPromises from "fs/promises"
 import path from "path"
@@ -28,7 +27,7 @@ export default async function encrypt(){
         console.log("Provider created successfully\n")
             // 2. ENCRYPT WALLET AND REMOVE RECORDED PRIVATE KEY
         console.log("Encrypting stored wallet...")
-        const encryptedPrivateKey = await web3Provider.eth.accounts.encrypt(PRIVATE_KEY, PASSWORD)
+        const encryptedPrivateKey: KeyStore = await web3Provider.eth.accounts.encrypt(PRIVATE_KEY, PASSWORD)
         
         const filePath: string = path.join(__dirname, '..', 'artifacts', 'wallet.json')
         await fsPromises.writeFile(filePath, JSON.stringify(encryptedPrivateKey, null ,4), "utf-8")
@@ -39,17 +38,6 @@ export default async function encrypt(){
         await fsPromises.writeFile(envFilePath, newContent, "utf-8")
         
         console.log("Private key encrypted, deleted from .env and stored successfully\n")
-            // 3. ENCRYPT PASSWORD AND EDIT RECORDED PASSWORD
-        console.log("Encrypting password...")
-        const salt = await bcrypt.genSalt(12);
-        const encryptedPassword = await bcrypt.hash(PASSWORD, salt)
-
-        contents = (await fsPromises.readFile(envFilePath)).toString("utf-8").split("\n")
-        newContent = contents.filter(string => !string.includes("PASSWORD=")).join("\n")
-        await fsPromises.writeFile(envFilePath, newContent, "utf-8")
-        await fsPromises.appendFile(envFilePath, `\nPASSWORD=${encryptedPassword}\n`, "utf-8")
-
-        console.log("Password encrypted and rewritten successfully\n")
     }catch(error: unknown){
         console.error(`${(error as Error).message}`)
     }

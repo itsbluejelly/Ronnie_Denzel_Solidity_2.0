@@ -2,12 +2,15 @@
     // IMPORTING NECESSARY MODULES
 import {Web3} from "web3"
 import dotenv from "dotenv"
-    // IMPORTING NECESSARY ABIS
+import fsPromises from "fs/promises"
+import path from "path"
+    // IMPORT NECESSARY ABIS
+import FundMeContractABI from "./artifacts/FundMe_sol_FundMe.json"
     // IMPORTING NECESSARY TYPES
 import { NetworkType, ChainType } from "src/types/types"
 import { RegisteredSubscription } from "web3/lib/commonjs/eth.exports"
     // IMPORTING NECESSARY CONFIGS
-import web3Config from "src/web3Config"
+import web3Config from "./src/web3Config"
 // const web3Config: NetworkType = {
 //     mainnet: [],
 
@@ -23,7 +26,7 @@ import web3Config from "src/web3Config"
 dotenv.config()
 
 // A FUNCTION TO GET THE CURRENT CHAIN RPC_URL
-function getCurrentChain(networkType: keyof NetworkType, chainID: number): ChainType{
+function getCurrentChainRPC(networkType: keyof NetworkType, chainID: number): string{
     // DECLARING VARIABLES
     const RPC_KEY = process.env.RPC_KEY
 
@@ -45,24 +48,19 @@ function getCurrentChain(networkType: keyof NetworkType, chainID: number): Chain
     console.log(`Success, we determined the network to be ${currentChain.name} ${networkType}`)
     currentChain.RPC_URL = `${currentChain.RPC_URL}/${process.env.RPC_KEY}`
 
-    return currentChain
+    return currentChain.RPC_URL
 }
 
 // A FUNCTION TO GET THE WALLET ADDRESS
-async function getCurrentAccount(chain: ChainType, web3Provider: Web3<RegisteredSubscription>): Promise<string>{
-    let accountAddress: string | undefined
+async function getCurrentAccount(web3Provider: Web3<RegisteredSubscription>): Promise<string>{
+    const filePath: string = path.join(__dirname, "artifacts", "wallet.json")
+    const encryptedPrivateKey = await fsPromises.readFile(filePath, "utf-8")
 
-    for(const address of chain.accounts){
-        const accountBalance: bigint = await web3Provider.eth.getBalance(address)
-        
-        if(accountBalance){
-            accountAddress = address
-        }else{
-            continue
-        }
-    }
+    // IF NO ENCRYPTED KEY IS FOUND, THROW AN ERROR, OTHERWISE GET THE WALLET ADDRESS
+    if(!encryptedPrivateKey) throw new Error("The targeted file lacks any content, try running the encrypted script first")
 
-    if(!accountAddress) throw new Error("The provided addresses have all their balances used up, or no address is provided at all")
+    const accountPrivateKey = (await web3Provider.eth.accounts.decrypt(encryptedPrivateKey, process.env.PASSWORD!)).privateKey
+    const accountAddress: string = web3Provider.eth.accounts.wallet.add(accountPrivateKey)[0].address
 
     return accountAddress
 }
@@ -71,13 +69,13 @@ async function getCurrentAccount(chain: ChainType, web3Provider: Web3<Registered
 export default async function main(RPC_URL?: string, networkType?: keyof NetworkType, chainID?: number): Promise<void>{
     try{
         // DEFINING VARIABLES
-        let currentChainRPC, currentAddress: string
-        let currentChain: ChainType | undefined
+        let currentChainRPC: string | undefined
+        let currentAddress: string | undefined
+        let gasEstimate: bigint | number
 
         // FINDING CURRENT CHAIN RPC_URL
         if(networkType && chainID && !RPC_URL){
-            currentChain = getCurrentChain(networkType, chainID)
-            currentChainRPC = currentChain.RPC_URL
+            currentChainRPC = getCurrentChainRPC(networkType, chainID)
         }else if(!networkType && !chainID && RPC_URL){
             currentChainRPC = RPC_URL
         }else{
@@ -90,17 +88,39 @@ export default async function main(RPC_URL?: string, networkType?: keyof Network
         console.log("Web3Provider instantiated successfully\n")
             // 2. CREATE A WEB3 WALLET
         console.log("Creating a web3 wallet...")
+        currentAddress = await getCurrentAccount(web3Provider)
+        const accountBalance: bigint = await web3Provider.eth.getBalance(currentAddress as string)
         
-        // FINDING CURRENT ACCOUNT ADDRESS
-        if(networkType && chainID && !RPC_URL){
-            currentAddress = await getCurrentAccount(currentChain as ChainType, web3Provider)
-        }else if(!networkType && !chainID && RPC_URL){
-            currentAddress = await web3Provider.eth.accounts.wallet.decrypt()
+        console.log(`Account obtained successfully\n\t- Account address: ${currentAddress}\n\t- Account balance ${parseFloat(web3Provider.utils.fromWei(accountBalance, "ether")).toFixed(5)} ETH\n`)
 
-        // 3. CREATE A CONTRACT
-        // 4. DEPLOY A CONTRACT
-        // 5. VERIFY THE CONTRACT
-        // 6. INTERACT
+            // 3. CREATE A CONTRACT
+        console.log("Creating the contract...")
+        const contract = new web3Provider.eth.Contract(FundMeContractABI)
+        console.log("Contract created successfully\n")
+            // 4. DEPLOY A CONTRACT
+        console.log("Deploying the contract...")
+
+        // FINDING THE BYTECODE
+        const bytePath = path.join(__dirname, "artifacts", "FundMe_sol_FundMe.bin")
+        const byteCode = `0x${await fsPromises.readFile(bytePath)}`
+        
+        // DEPLOYING THE CONTRACT
+        const fundAmount: string = web3Provider.utils.toWei(0.001, "ether")
+        
+        gasEstimate = await contract
+            .deploy({data: byteCode, arguments: [fundAmount]})
+            .estimateGas({from: currentAddress})
+        
+        const deployedContract = await contract
+            .deploy({data: byteCode, arguments: [fundAmount]})
+            .send({from: currentAddress})
+
+        console.log(`Contract deployed successfully\n\t- Contract address: ${deployedContract.options.address}\n\t- Gas used: ${web3Provider.utils.fromWei(gasEstimate, "ether")} ETH\n`)
+            // 5. VERIFY THE CONTRACT
+            // 6. INTERACT
+        const finalAccountBalance: bigint = await web3Provider.eth.getBalance(currentAddress as string)
+        
+        console.log(`Account balance: ${parseFloat(web3Provider.utils.fromWei(finalAccountBalance, "ether")).toFixed(5)}/${parseFloat(web3Provider.utils.fromWei(accountBalance, "ether")).toFixed(5)} ETH\n`)
     }catch(error: unknown){
         console.error(`${(error as Error).message}`)
     }

@@ -7,14 +7,13 @@
   "license": "ISC",
   "scripts": {
     "compile": "solcjs --bin --abi -p -v -o artifacts --base-path ./contracts ./contracts/FundMe.sol",
-    "dev": "ts-node index.ts"
+    "dev": "ts-node index.ts",
+    "encrypt": "ts-node src/encrypt.ts"
   },
   "dependencies": {
-    "bcrypt": "^5.1.1",
     "web3": "^4.8.0"
   },
   "devDependencies": {
-    "@types/bcrypt": "^5.0.2",
     "dotenv": "^16.4.5"
   }
 }
