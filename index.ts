@@ -8,7 +8,7 @@ import path from "path"
 import FundMeContractABI from "./artifacts/FundMe_sol_FundMe.json"
     // IMPORTING NECESSARY TYPES
 import { NetworkType, ChainType } from "src/types/types"
-import { RegisteredSubscription } from "web3/lib/commonjs/eth.exports"
+import { RegisteredSubscription, estimateGas } from "web3/lib/commonjs/eth.exports"
     // IMPORTING NECESSARY CONFIGS
 import web3Config from "./src/web3Config"
 // const web3Config: NetworkType = {
@@ -116,8 +116,17 @@ export default async function main(RPC_URL?: string, networkType?: keyof Network
             .send({from: currentAddress})
 
         console.log(`Contract deployed successfully\n\t- Contract address: ${deployedContract.options.address}\n\t- Gas used: ${web3Provider.utils.fromWei(gasEstimate, "ether")} ETH\n`)
-            // 5. VERIFY THE CONTRACT
+            
             // 6. INTERACT
+        console.log("Getting the contact owner's address...")
+        gasEstimate = await deployedContract.methods.owner().estimateGas()
+        const ownerAddress: string = await deployedContract.methods.owner().call()
+        
+        console.log(`Owner fetched successfully\n\t-Current owner: ${ownerAddress}\n\t-Current address: ${currentAddress}\n\t-Gas used: ${web3Provider.utils.fromWei(gasEstimate, "ether")} ETH\n`)
+
+        console.log("Getting transfership events...")
+        const ownershipTranferEvent = deployedContract.events.OwnershipTransferred({filter: {newOwner: currentAddress}})
+        ownershipTranferEvent.on("data", (data) => console.log(data.event))
         const finalAccountBalance: bigint = await web3Provider.eth.getBalance(currentAddress as string)
         
         console.log(`Account balance: ${parseFloat(web3Provider.utils.fromWei(finalAccountBalance, "ether")).toFixed(5)}/${parseFloat(web3Provider.utils.fromWei(accountBalance, "ether")).toFixed(5)} ETH\n`)
