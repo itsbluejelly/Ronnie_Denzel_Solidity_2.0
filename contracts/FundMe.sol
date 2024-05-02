@@ -73,6 +73,7 @@ contract FundMe is IFundMe, Ownable(msg.sender){
         }
 
         // CARRY OUT TRANSACTION OF EXCESS AMOUNT
+        payerAmountMapping[_refundAddress] = fundAmount;
         (bool success, ) = _refundAddress.call{value: excessAmount}("");
 
         // CHECK IF TRANSACTION WENT THROUGH

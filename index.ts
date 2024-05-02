@@ -8,20 +8,9 @@ import path from "path"
 import FundMeContractABI from "./artifacts/FundMe_sol_FundMe.json"
     // IMPORTING NECESSARY TYPES
 import { NetworkType, ChainType } from "src/types/types"
-import { RegisteredSubscription, estimateGas } from "web3/lib/commonjs/eth.exports"
+import { RegisteredSubscription } from "web3/lib/commonjs/eth.exports"
     // IMPORTING NECESSARY CONFIGS
 import web3Config from "./src/web3Config"
-// const web3Config: NetworkType = {
-//     mainnet: [],
-
-//     testnet: [{
-//         name: "Sepolia",
-//         ID: 11155111,
-//         explorerURL: "https://sepolia.etherscan.io",
-//         RPC_URL: "https://sepolia.infura.io/v3",
-//         accounts: ["0x680811fF817962cA83040532776550fD790C2F9b"] //ADD YOUR OWN ADDRESSES
-//     }]
-// }
 
 dotenv.config()
 
@@ -105,7 +94,7 @@ export default async function main(RPC_URL?: string, networkType?: keyof Network
         const byteCode = `0x${await fsPromises.readFile(bytePath)}`
         
         // DEPLOYING THE CONTRACT
-        const fundAmount: string = web3Provider.utils.toWei(0.001, "ether")
+        let fundAmount: string = web3Provider.utils.toWei(0.001, "ether")
         
         gasEstimate = await contract
             .deploy({data: byteCode, arguments: [fundAmount]})
@@ -121,14 +110,57 @@ export default async function main(RPC_URL?: string, networkType?: keyof Network
         console.log("Getting the contact owner's address...")
         gasEstimate = await deployedContract.methods.owner().estimateGas()
         const ownerAddress: string = await deployedContract.methods.owner().call()
-        
         console.log(`Owner fetched successfully\n\t-Current owner: ${ownerAddress}\n\t-Current address: ${currentAddress}\n\t-Gas used: ${web3Provider.utils.fromWei(gasEstimate, "ether")} ETH\n`)
-
-        console.log("Getting transfership events...")
-        const ownershipTranferEvent = deployedContract.events.OwnershipTransferred({filter: {newOwner: currentAddress}})
-        ownershipTranferEvent.on("data", (data) => console.log(data.event))
-        const finalAccountBalance: bigint = await web3Provider.eth.getBalance(currentAddress as string)
         
+        console.log("Setting fund amount...")
+        fundAmount = web3Provider.utils.toWei(0.002, "ether")
+        gasEstimate = await deployedContract.methods.setFundAmount(fundAmount).estimateGas({from: currentAddress})
+        await deployedContract.methods.setFundAmount(fundAmount).send({from: currentAddress})
+        console.log(`Gas updated successfully\n\t-Gas used: ${web3Provider.utils.fromWei(gasEstimate, "ether")} ETH\n`)
+
+        console.log("Fetching new fund amount...")
+        gasEstimate = await deployedContract.methods.fundAmount().estimateGas()
+        fundAmount = await deployedContract.methods.fundAmount().call()
+        console.log(`Fund amount fetched successfully\n\t-New amount: ${web3Provider.utils.fromWei(fundAmount, "ether")} ETH\n\t-Gas used: ${web3Provider.utils.fromWei(gasEstimate, "ether")} ETH\n`)
+
+        console.log("Funding the contract...")
+        gasEstimate = await deployedContract.methods.fund().estimateGas({
+            from: currentAddress,
+            value: fundAmount
+        }) + BigInt(fundAmount)
+        
+        await deployedContract.methods.fund().send({
+            from: currentAddress,
+            value: fundAmount
+        })
+        console.log(`Funded money successfully\n\t -Gas used: ${web3Provider.utils.fromWei(gasEstimate, "ether")} ETH\n\tCurrent gain ${web3Provider.utils.fromWei(await web3Provider.eth.getBalance(deployedContract.options.address as string), "ether")} ETH\n`)
+
+        console.log("Getting back the value of the money sent...")
+        gasEstimate = await deployedContract.methods.payerAmountMapping(currentAddress).estimateGas()
+        const depositedAmount: bigint = await deployedContract.methods.payerAmountMapping(currentAddress).call()
+        console.log(`Success, amount obtained successfully\n\t- Total amount ${web3Provider.utils.fromWei(depositedAmount, "ether")} ETH\n\t-Gas used ${web3Provider.utils.fromWei(gasEstimate, "ether")} ETH\n`)
+
+        console.log("Getting the first depositor...")
+        gasEstimate = await deployedContract.methods.payerAddresses(0).estimateGas()
+        const firstDepositor: string = await deployedContract.methods.payerAddresses(0).call()
+        console.log(`Success, depositor obtained successfully\n\t- First depositor address: ${firstDepositor}\n\t-Current address: ${currentAddress}\n\t-Gas used ${web3Provider.utils.fromWei(gasEstimate, "ether")} ETH\n`)
+        
+        console.log("Carrying out refunds")
+        gasEstimate = await deployedContract.methods.refund(currentAddress).estimateGas({from: currentAddress})
+        await deployedContract.methods.refund(currentAddress).send({from: currentAddress})
+        console.log(`Money refunded successfully\n\t-Gas used ${web3Provider.utils.fromWei(gasEstimate, "ether")} ETH\n\t-Current gain ${web3Provider.utils.fromWei(await web3Provider.eth.getBalance(deployedContract.options.address as string), "ether")} ETH\n`)
+
+        console.log("Carrying out refunds")
+        gasEstimate = await deployedContract.methods.refund(currentAddress).estimateGas({from: currentAddress})
+        await deployedContract.methods.refund(currentAddress).send({from: currentAddress})
+        console.log(`Money refunded successfully\n\t-Gas used ${web3Provider.utils.fromWei(gasEstimate, "ether")} ETH\n\t-Current gain ${web3Provider.utils.fromWei(await web3Provider.eth.getBalance(deployedContract.options.address as string), "ether")} ETH\n`)
+
+        console.log("Withdrawing the money...")
+        gasEstimate = await deployedContract.methods.withdraw().estimateGas({from: currentAddress})
+        await deployedContract.methods.withdraw().send({from: currentAddress})
+        console.log(`Money withdrawn successfully\n\t-Gas used ${web3Provider.utils.fromWei(gasEstimate, "ether")} ETH\n\t-Current gain ${web3Provider.utils.fromWei(await web3Provider.eth.getBalance(deployedContract.options.address as string), "ether")} ETH\n`)
+
+        const finalAccountBalance: bigint = await web3Provider.eth.getBalance(currentAddress as string)
         console.log(`Account balance: ${parseFloat(web3Provider.utils.fromWei(finalAccountBalance, "ether")).toFixed(5)}/${parseFloat(web3Provider.utils.fromWei(accountBalance, "ether")).toFixed(5)} ETH\n`)
     }catch(error: unknown){
         console.error(`${(error as Error).message}`)

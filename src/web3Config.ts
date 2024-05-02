@@ -9,8 +9,7 @@ const web3Config: NetworkType = {
         name: "Sepolia",
         ID: 11155111,
         explorerURL: "https://sepolia.etherscan.io",
-        RPC_URL: "https://sepolia.infura.io/v3",
-        accounts: ["0x680811fF817962cA83040532776550fD790C2F9b"] //ADD YOUR OWN ADDRESSES
+        RPC_URL: "https://sepolia.infura.io/v3"
     }]
 }
 

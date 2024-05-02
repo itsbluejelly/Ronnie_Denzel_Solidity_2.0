@@ -6,8 +6,7 @@ export type ChainType = {
     ID: number,
     name: string,
     explorerURL?: string,
-    RPC_URL?: string,
-    accounts: `0x${string}`[]
+    RPC_URL?: string
 }
 
 // A TYPE FOR THE NETWORK
