@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "hardhat": "^2.22.3"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^5.0.0",
+    "@nomicfoundation/hardhat-web3-v4": "^1.0.0",
+    "web3": "^4.8.0"
+  }
+}
