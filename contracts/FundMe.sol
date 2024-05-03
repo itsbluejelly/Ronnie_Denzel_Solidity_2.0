@@ -3,11 +3,11 @@ pragma solidity ^0.8.25;
 
 // IMPORTING NECESSARY FILES
     // IMPORTING INTERFACES
-import "interfaces/IFundMe.sol";
+import "./interfaces/IFundMe.sol";
     // IMPORTING CONTRACTS
-import "@openzeppelin/contracts/access/Ownable.sol";
+import "./@openzeppelin/contracts/access/Ownable.sol";
     // IMPORTING LIBRARIES
-import "libraries/AddressArray.sol";
+import "./libraries/AddressArray.sol";
 
 contract FundMe is IFundMe, Ownable(msg.sender){
     // DECLARING LIBRARIES
