@@ -1,0 +1,13 @@
+{
+  "dependencies": {
+    "hardhat": "^2.22.3"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^5.0.0",
+    "@nomicfoundation/hardhat-web3-v4": "^1.0.0",
+    "web3": "^4.8.0"
+  },
+  "scripts": {
+    "_c": "cd C:\\msys64\\mingw64\\bin && .\\gcc.exe -Wall -Wextra -g3 C:\\Users\\Ronnie\\Desktop\\Ronnie_Denzel_Solidity_2.0\\test.c -o C:\\Users\\Ronnie\\Desktop\\Ronnie_Denzel_Solidity_2.0\\output\\test.exe"
+  }
+}
