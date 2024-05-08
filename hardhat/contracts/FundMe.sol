@@ -19,7 +19,7 @@ contract FundMe is IFundMe, Ownable(msg.sender){
     uint public fundAmount; 
 
     // A CONSTRUCTOR TO SET THE INITIAL CNTRACT VALUES
-    constructor(uint _fundAmount) onlyOwner{
+    constructor(uint _fundAmount){
         fundAmount = _fundAmount;
     }
 
@@ -38,10 +38,20 @@ contract FundMe is IFundMe, Ownable(msg.sender){
         // RECORDING TRANSACTION
        payerAmountMapping[_msgSender()] += msg.value;
        if(!payerAddresses.includes(_msgSender())) payerAddresses.push(_msgSender());
+       
+       emit funded(_msgSender(), fundAmount);
     }
 
     // A FUNCTION TO WITHDRAW FUNDS BY THE OWNER
     function withdraw() external onlyOwner{
+        // RESET THE PAYER RECORDS
+        for(uint i = 0; i < payerAddresses.length; i++){
+            address currentAddress = payerAddresses[i];
+            payerAmountMapping[currentAddress] = 0;
+        }
+
+        payerAddresses = new address[](0);
+
         // CARRYING OUT TRANSACTION
         address payable currentOwner = payable(owner());
         uint currentValue = address(this).balance;
@@ -52,13 +62,7 @@ contract FundMe is IFundMe, Ownable(msg.sender){
             revert FailedTransaction();
         }
 
-        // RESET THE PAYER RECORDS
-        for(uint i = 0; i < payerAddresses.length; i++){
-            address currentAddress = payerAddresses[i];
-            payerAmountMapping[currentAddress] = 0;
-        }
-
-        payerAddresses = new address[](0);
+        emit funded(currentOwner, currentValue);
     }
 
     // A FUNCTION TO REFUND THE EXCESSIVELY PAYING USER
@@ -72,13 +76,16 @@ contract FundMe is IFundMe, Ownable(msg.sender){
             revert InvalidRefund();
         }
 
-        // CARRY OUT TRANSACTION OF EXCESS AMOUNT
+        // RESET THE PAYER RECORDS
         payerAmountMapping[_refundAddress] = fundAmount;
+        // CARRY OUT TRANSACTION OF EXCESS AMOUNT
         (bool success, ) = _refundAddress.call{value: excessAmount}("");
 
         // CHECK IF TRANSACTION WENT THROUGH
         if(!success){
             revert FailedTransaction();
         }
+
+        emit funded(_refundAddress, excessAmount);
     }
 }
