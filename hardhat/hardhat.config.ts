@@ -1,6 +1,6 @@
 // IMPORTING NECESSARY FILES
   // IMPORTING MODULES
-import { HardhatUserConfig, task } from "hardhat/config";
+import { HardhatUserConfig, task, vars } from "hardhat/config";
 import "@nomicfoundation/hardhat-toolbox";
 import "@nomicfoundation/hardhat-web3-v4";
   // IMPORTING TYPES
@@ -44,20 +44,38 @@ task(
     "The denomination to report the balance in, defaults to ether if not provided"
   );
 
+// GETTING ENV VARIABLES
+  // LOCALHOST
+const LOCALHOST_RPC_URL: string = vars.get("LOCALHOST_RPC_URL");
+const LOCALHOST_ACCOUNT_KEY_ONE: string = vars.get("LOCALHOST_ACCOUNT_KEY_ONE");
+const LOCALHOST_ACCOUNT_KEY_TWO: string = vars.get("LOCALHOST_ACCOUNT_KEY_TWO");
+  // SEPOLIA
+const SEPOLIA_RPC_URL: string = vars.get("SEPOLIA_RPC_URL");
+const SEPOLIA_ACCOUNT_KEY: string = vars.get("SEPOLIA_ACCOUNT_KEY");
+const ETHERSCAN_API_KEY: string = vars.get("ETHERSCAN_API_KEY");
+
 const config: HardhatUserConfig = {
   solidity: "0.8.25",
   defaultNetwork: "hardhat",
 
   networks: {
     localhost: {
-      url: "http://127.0.0.1:8545/",
-      
-      accounts: [
-        "0xdf57089febbacf7ba0bc227dafbffa9fc08a93fdc68e1e42411a14efcf23656e",
-        "0xde9be858da4a475276426320d5e9262ecfc3ba460bfac56360bfa6c4c28b4ee0",
-      ]
+      url: LOCALHOST_RPC_URL,
+      accounts: [LOCALHOST_ACCOUNT_KEY_ONE, LOCALHOST_ACCOUNT_KEY_TWO],
     },
+
+    sepolia: {
+      url: SEPOLIA_RPC_URL,
+      chainId: 11155111,
+      accounts: [SEPOLIA_ACCOUNT_KEY],      
+    }
   },
+
+  etherscan: {
+    apiKey: {
+      sepolia: ETHERSCAN_API_KEY
+    }
+  }
 };
 
 export default config;

@@ -5,6 +5,7 @@ import { AccountType, EventType } from "../types/types"
 import {abi as FundMeContractABI} from "../artifacts/contracts/FundMe.sol/FundMe.json"
     // IMPORTING MODULES
 import {web3} from "hardhat"
+import { vars } from "hardhat/config";
 
 // A FUNCTION TO GET THE HIGHEST BALANCED ACOUNT
 async function getRichestAccount(accounts: string[]): Promise<AccountType>{
@@ -220,31 +221,31 @@ async function FundMeTest(
         )} ETH\n`
       );
 
-      // A FUNCTION TO FINALLY TRANSFER OWNERSHIP
-      console.log("Terminating ownership...");
+    //   // A FUNCTION TO FINALLY TRANSFER OWNERSHIP
+    //   console.log("Terminating ownership...");
 
-      gasEstimate = web3.utils.fromWei(
-        await deployedContract.methods
-          .renounceOwnership()
-          .estimateGas({ from: mainAccount }),
+    //   gasEstimate = web3.utils.fromWei(
+    //     await deployedContract.methods
+    //       .renounceOwnership()
+    //       .estimateGas({ from: mainAccount }),
 
-        "ether"
-      );
+    //     "ether"
+    //   );
 
-      await deployedContract.methods
-        .renounceOwnership()
-        .send({ from: mainAccount });
-      currentOwner = await deployedContract.methods.owner().call();
+    //   await deployedContract.methods
+    //     .renounceOwnership()
+    //     .send({ from: mainAccount });
+    //   currentOwner = await deployedContract.methods.owner().call();
 
-      console.log(
-        `Owner found successfully\n\t- Current owner: ${currentOwner}\n\t- Gas used: ${parseFloat(
-          gasEstimate
-        ).toFixed(4)} ETH\n`
-      );
+    //   console.log(
+    //     `Owner found successfully\n\t- Current owner: ${currentOwner}\n\t- Gas used: ${parseFloat(
+    //       gasEstimate
+    //     ).toFixed(4)} ETH\n`
+    //   );
     }
   } catch (error: unknown) {
     console.error(error);
   }
 }
 
-FundMeTest("0x37dD26d18abeC2d311e82177f9fa58E9DC14b579");
+FundMeTest(vars.get("SEPOLIA_CONTRACT_ADDRESS"));
