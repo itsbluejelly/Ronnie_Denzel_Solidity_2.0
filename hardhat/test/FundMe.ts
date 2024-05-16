@@ -10,8 +10,8 @@ import {abi as FundMeABI, bytecode} from "../artifacts/contracts/FundMe.sol/Fund
 describe("FundMeContract", () => {
     // A FUNCTION TO DEPLOY THE CONTRACT
     async function deployContract(){
-            // 1. GET WEB3 WALLET
-        console.log("Obtaining 2 accounts with sufficient funds...")
+        // 1. GET WEB3 WALLET
+    console.log("Obtaining 2 accounts with sufficient funds...")
 		const [mainAccount, otherAccount] = await web3.eth.getAccounts()
 		const mainAccountBalance: string = web3.utils.fromWei(await web3.eth.getBalance(mainAccount), "ether")
 		const otherAccountBalance: string = web3.utils.fromWei(await web3.eth.getBalance(otherAccount), "ether")
