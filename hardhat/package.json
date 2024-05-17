@@ -5,6 +5,7 @@
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^5.0.0",
     "@nomicfoundation/hardhat-web3-v4": "^1.0.0",
+    "hardhat-gas-reporter": "^2.1.1",
     "web3": "4"
   }
 }

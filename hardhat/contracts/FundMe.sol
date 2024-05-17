@@ -45,8 +45,10 @@ contract FundMe is IFundMe, Ownable(msg.sender){
     // A FUNCTION TO WITHDRAW FUNDS BY THE OWNER
     function withdraw() external onlyOwner{
         // RESET THE PAYER RECORDS
-        for(uint i = 0; i < payerAddresses.length; i++){
-            address currentAddress = payerAddresses[i];
+        address[] memory savedAddresses = payerAddresses;
+        
+        for(uint i = 0; i < savedAddresses.length; i++){
+            address currentAddress = savedAddresses[i];
             payerAmountMapping[currentAddress] = 0;
         }
 
